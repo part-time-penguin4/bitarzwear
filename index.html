@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<head>
+    <!-- Mevcut CSS -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Veri yönetim sistemi -->
+    <script src="data-manager.js"></script>
+</head>
+<body>
+    <!-- Mevcut HTML içeriği -->
+    
+    <!-- Güncellenmiş JavaScript -->
+    <script src="script-updated.js"></script>
+</body>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitarzWear - Sade, Uygun, Yenilikçi</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome ekleyin -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BitarzWear - Sade, Uygun, Yenilikçi</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <div class="logo">
+                <div class="logo-image">
+                    <svg width="50" height="50" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="50" fill="#c49a9a"/>
+                        <text x="50" y="35" font-family="cursive" font-size="20" fill="#f5f1eb" text-anchor="middle" font-weight="bold">bitArz</text>
+                        <line x1="20" y1="50" x2="80" y2="50" stroke="#f5f1eb" stroke-width="2"/>
+                        <text x="50" y="70" font-family="Arial" font-size="12" fill="#a8c8a8" text-anchor="middle" font-weight="bold" letter-spacing="2">WEAR</text>
+                    </svg>
+                </div>
+                <div class="logo-text">B!TARZWEAR</div>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#home">Ana Sayfa</a></li>
+                <li><a href="#products">Ürünler</a></li>
+                <li><a href="#about">Hakkımızda</a></li>
+                <li><a href="#contact">İletişim</a></li>
+            </ul>
+            <a href="#cart" class="cart-icon">🛒 Sepet</a>
+        </nav>
+    </header>
+
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-logo fade-in">
+                <svg width="150" height="150" viewBox="0 0 100 100">
+                    <circle cx="50" cy="50" r="50" fill="#c49a9a"/>
+                    <text x="50" y="35" font-family="cursive" font-size="20" fill="#f5f1eb" text-anchor="middle" font-weight="bold">bitArz</text>
+                    <line x1="20" y1="50" x2="80" y2="50" stroke="#f5f1eb" stroke-width="2"/>
+                    <text x="50" y="70" font-family="Arial" font-size="12" fill="#a8c8a8" text-anchor="middle" font-weight="bold" letter-spacing="2">WEAR</text>
+                </svg>
+            </div>
+            <h1 class="fade-in">B!TARZWEAR</h1>
+            <p class="fade-in">Sokak Stili • Uygun Fiyat • Yenilikçi Giyim</p>
+            <a href="#products" class="cta-button fade-in">Koleksiyonu Keşfet</a>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💰</div>
+                    <h3>Uygun Fiyat</h3>
+                    <p>Kaliteli giyim ürünlerini herkesin ulaşabileceği fiyatlarda sunuyoruz.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">✨</div>
+                    <h3>Sade Tasarım</h3>
+                    <p>Minimalist ve şık tasarımlar ile zamansız görünümler yaratıyoruz.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Yenilikçi</h3>
+                    <p>En son moda trendlerini takip ederek yenilikçi ürünler geliştiriyoruz.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products" id="products">
+        <div class="container">
+            <h2>Street Collection</h2>
+            <div class="products-grid">
+                <!-- Oversize Gri Tişört -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="oversize-tee">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjZjBmMGYwLCAjZThlOGU4KSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0MCwgNTApIj4KICA8IS0tIFRpc2hpcnQgU2hhcGUgLS0+CiAgPHBhdGggZD0iTTUwIDIwIEwxNTAgMjAgTDE5MCA2MCBMMTkwIDIwMCBMOTAgMjAwIEw5MCA2MCBaIiBmaWxsPSIjZGRkZGRkIiBzdHJva2U9IiNjY2MiIHN0cm9rZS13aWR0aD0iMiIvPgogIDwhLS0gU2xlZXZlcyAtLT4KICA8ZWxsaXBzZSBjeD0iMjUiIGN5PSI4MCIgcng9IjM1IiByeT0iNDAiIGZpbGw9IiNkZGRkZGQiIHN0cm9rZT0iI2NjYyIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGVsbGlwc2UgY3g9IjIxNSIgY3k9IjgwIiByeD0iMzUiIHJ5PSI0MCIgZmlsbD0iI2RkZGRkZCIgc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIE5lY2sgLS0+CiAgPGVsbGlwc2UgY3g9IjEyMCIgY3k9IjQwIiByeD0iMjAiIHJ5PSIyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9nPgo8dGV4dCB4PSIxNDAiIHk9IjI3MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5PdmVyc2l6ZSBUZWU8L3RleHQ+Cjwvc3ZnPg==" alt="Oversize Basic Tee">
+                        <div class="product-badge">OVERSIZE</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Oversize Basic Tee</h3>
+                        <div class="product-price">
+                            ₺129
+                            <span class="original-price">₺179</span>
+                        </div>
+                        <button class="add-to-cart" data-product="oversize-tee" data-price="129">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Oversize Beyaz Tişört -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="white-tee">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjZmZmZmZmLCAjZjhmOGY4KSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0MCwgNTApIj4KICA8IS0tIFRpc2hpcnQgU2hhcGUgLS0+CiAgPHBhdGggZD0iTTUwIDIwIEwxNTAgMjAgTDE5MCA2MCBMMTkwIDIwMCBMOTAgMjAwIEw5MCA2MCBaIiBmaWxsPSIjZmZmZmZmIiBzdHJva2U9IiNlZWUiIHN0cm9rZS13aWR0aD0iMiIvPgogIDwhLS0gU2xlZXZlcyAtLT4KICA8ZWxsaXBzZSBjeD0iMjUiIGN5PSI4MCIgcng9IjM1IiByeT0iNDAiIGZpbGw9IiNmZmZmZmYiIHN0cm9rZT0iI2VlZSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPGVsbGlwc2UgY3g9IjIxNSIgY3k9IjgwIiByeD0iMzUiIHJ5PSI0MCIgZmlsbD0iI2ZmZmZmZiIgc3Ryb2tlPSIjZWVlIiBzdHJva2Utd2lkdGg9IjIiLz4KICA8IS0tIE5lY2sgLS0+CiAgPGVsbGlwc2UgY3g9IjEyMCIgY3k9IjQwIiByeD0iMjAiIHJ5PSIyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZWVlIiBzdHJva2Utd2lkdGg9IjIiLz4KPC9nPgo8dGV4dCB4PSIxNDAiIHk9IjI3MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjY2NjIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5XaGl0ZSBUZWU8L3RleHQ+Cjwvc3ZnPg==" alt="Oversize White Tee">
+                        <div class="product-badge">WHITE</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Oversize White Tee</h3>
+                        <div class="product-price">
+                            ₺139
+                            <span class="original-price">₺189</span>
+                        </div>
+                        <button class="add-to-cart" data-product="white-tee" data-price="139">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Gri Bol Pantolon -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="grey-pants">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjZThlOGU4LCAjZDNkM2QzKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCwgMzApIj4KICA8IS0tIFBhbnRzIFNoYXBlIC0tPgogIDxwYXRoIGQ9Ik00MCAyMCBMMTIwIDIwIEwxMzAgNTAgTDEzNSAyNDAgTDExMCAyNDAgTDExMCAyMDAgTDkwIDIwMCBMOTAgMjQwIEw2NSAyNDAgTDcwIDUwIFoiIGZpbGw9IiNkM2QzZDMiIHN0cm9rZT0iI2JiYiIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPCEtLSBXYWlzdGJhbmQgLS0+CiAgPHJlY3QgeD0iNDAiIHk9IjIwIiB3aWR0aD0iODAiIGhlaWdodD0iMTAiIGZpbGw9IiNjY2MiLz4KICA8IS0tIFBvY2tldCAtLT4KICA8cmVjdCB4PSI5NSIgeT0iNzAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjYmJiIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9nPgo8dGV4dCB4PSIxNDAiIHk9IjI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjOTk5IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5CYWdneSBQYW50czwvdGV4dD4KPC9zdmc+" alt="Grey Baggy Pants">
+                        <div class="product-badge">BAGGY</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Grey Baggy Pants</h3>
+                        <div class="product-price">
+                            ₺199
+                            <span class="original-price">₺279</span>
+                        </div>
+                        <button class="add-to-cart" data-product="grey-pants" data-price="199">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Siyah Bol Pantolon -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="black-pants">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjMmEyYTJhLCAjMWExYTFhKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3MCwgMzApIj4KICA8IS0tIFBhbnRzIFNoYXBlIC0tPgogIDxwYXRoIGQ9Ik00MCAyMCBMMTIwIDIwIEwxMzAgNTAgTDEzNSAyNDAgTDExMCAyNDAgTDExMCAyMDAgTDkwIDIwMCBMOTAgMjQwIEw2NSAyNDAgTDcwIDUwIFoiIGZpbGw9IiMzMzMiIHN0cm9rZT0iIzU1NSIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPCEtLSBXYWlzdGJhbmQgLS0+CiAgPHJlY3QgeD0iNDAiIHk9IjIwIiB3aWR0aD0iODAiIGhlaWdodD0iMTAiIGZpbGw9IiM0NDQiLz4KICA8IS0tIFBvY2tldCAtLT4KICA8cmVjdCB4PSI5NSIgeT0iNzAiIHdpZHRoPSIyMCIgaGVpZ2h0PSIyNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTU1IiBzdHJva2Utd2lkdGg9IjEiLz4KPC9nPgo8dGV4dCB4PSIxNDAiIHk9IjI4MCIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNzc3IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5Mb29zZSBGaXQ8L3RleHQ+Cjwvc3ZnPg==" alt="Black Loose Fit">
+                        <div class="product-badge">LOOSE</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Black Loose Fit</h3>
+                        <div class="product-price">
+                            ₺179
+                            <span class="original-price">₺239</span>
+                        </div>
+                        <button class="add-to-cart" data-product="black-pants" data-price="179">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Eşofman Takımı -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="comfy-set">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjZjBmMGYwLCAjZTBlMGUwKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0MCwgMjApIj4KICA8IS0tIFRvcCAtLT4KICA8cGF0aCBkPSJNNTAgMTAgTDE1MCAxMCBMMTkwIDQwIEwxOTAgMTIwIEw5MCAxMjAgTDkwIDQwIFoiIGZpbGw9IiNlZWVlZWUiIHN0cm9rZT0iI2RkZCIgc3Ryb2tlLXdpZHRoPSIyIi8+CiAgPCEtLSBCb3R0b20gLS0+CiAgPHBhdGggZD0iTTcwIDEzMCBMMTcwIDEzMCBMMTgwIDE2MCBMMTU1IDI2MCBMMTM1IDI2MCBMMTM1IDIyMCBMMTE1IDIyMCBMMTE1IDI2MCBMOTE1IDI2MCBMOTA1IDE2MCBaIiBmaWxsPSIjZWVlZWVlIiBzdHJva2U9IiNkZGQiIHN0cm9rZS13aWR0aD0iMiIvPgo8L2c+Cjx0ZXh0IHg9IjE0MCIgeT0iMjkwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNvbWZ5IFNldDwvdGV4dD4KPC9zdmc+" alt="Comfy Set Bundle">
+                        <div class="product-badge bundle">BUNDLE</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Comfy Set Bundle</h3>
+                        <div class="product-price">
+                            ₺299
+                            <span class="original-price">₺399</span>
+                        </div>
+                        <button class="add-to-cart" data-product="comfy-set" data-price="299">Sepete Ekle</button>
+                    </div>
+                </div>
+
+                <!-- Bomber Jacket -->
+                <div class="product-card fade-in">
+                    <div class="product-image" data-product="bomber-jacket">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSJsaW5lYXItZ3JhZGllbnQoMTM1ZGVnLCAjMmEyYTJhLCAjMWExYTFhKSIvPgo8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSg0MCwgNDApIj4KICA8IS0tIEJvbWJlciBKYWNrZXQgLS0+CiAgPHBhdGggZD0iTTUwIDMwIEwxNTAgMzAgTDE5MCA3MCBMMTY1IDIwMCBMMTE1IDIwMCBMOTAgNzAgWiIgZmlsbD0iIzMzMyIgc3Ryb2tlPSIjNTU1IiBzdHJva2Utd2lkdGg9IjMiLz4KICA8IS0tIFppcHBlciAtLT4KICA8bGluZSB4MT0iMTIwIiB5MT0iNTAiIHgyPSIxMjAiIHkyPSIxODAiIHN0cm9rZT0iIzY2NiIgc3Ryb2tlLXdpZHRoPSIzIi8+CiAgPCEtLSBQb2NrZXRzIC0tPgogIDxyZWN0IHg9Ijc1IiB5PSIxMjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIyMCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNTU1IiBzdHJva2Utd2lkdGg9IjIiLz4KICA8cmVjdCB4PSIxMzUiIHk9IjEyMCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjIwIiBmaWxsPSJub25lIiBzdHJva2U9IiM1NTUiIHN0cm9rZS13aWR0aD0iMiIvPgo8L2c+Cjx0ZXh0IHg9IjE0MCIgeT0iMjgwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTQiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJvbWJlcjwvdGV4dD4KPC9zdmc+" alt="Street Bomber">
+                        <div class="product-badge">BOMBER</div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">Street Bomber</h3>
+                        <div class="product-price">
+                            ₺249
+                            <span class="original-price">₺329</span>
+                        </div>
+                        <button class="add-to-cart" data-product="bomber-jacket" data-price="249">Sepete Ekle</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- About Section -->
+    <section class="about" id="about">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2 class="fade-in">Hakkımızda</h2>
+                    <p class="fade-in">
+                        <strong>BitarzWear</strong>, sokak modasını yeniden tanımlayan, genç ve dinamik bir giyim markasıdır. 
+                        2025 yılında kurulan markamız, kaliteli ürünleri herkesin ulaşabileceği fiyatlarda sunma misyonuyla yola çıktı.
+                    </p>
+                    <!-- ... (artifact'taki tüm about içeriği) -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Mevcut contact bölümünü şu şekilde değiştirin: -->
+<section class="contact" id="contact">
+    <div class="container">
+        <h2>İletişim</h2>
+        <p>Bizimle iletişime geçin - sorularınızı yanıtlamak için buradayız!</p>
+        
+        <div class="contact-container">
+            <!-- İletişim Bilgileri - Sol taraf -->
+            <div class="contact-info">
+                <h3>İletişim Bilgileri</h3>
+                <p>📞 +90 507 128 3393</p>
+                <p>📧 info@bitarzwear.com</p>
+                <p>📍 Sakarya/erenler, Türkiye</p>
+            </div>
+            
+            <!-- Sosyal Medya ve E-ticaret - Sağ taraf -->
+            <div class="social-media">
+                <h3>Bizi Takip Edin</h3>
+                <div class="social-links">
+                    <a href="https://instagram.com/bitarzwear" target="_blank" class="social-link instagram">
+                        <i class="fab fa-instagram"></i>
+                        Instagram
+                    </a>
+                    <a href="https://dolap.com/bitarzwear" target="_blank" class="social-link dolap">
+                        <i class="fas fa-shopping-bag"></i>
+                        Dolap
+                    </a>
+                    <a href="https://www.shopier.com/" target="_blank" class="social-link shopier">
+                        <i class="fas fa-store"></i>
+                        shopier
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</section>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <svg width="60" height="60" viewBox="0 0 100 100">
+                            <circle cx="50" cy="50" r="50" fill="#c49a9a"/>
+                            <text x="50" y="35" font-family="cursive" font-size="20" fill="#f5f1eb" text-anchor="middle" font-weight="bold">bitArz</text>
+                            <line x1="20" y1="50" x2="80" y2="50" stroke="#f5f1eb" stroke-width="2"/>
+                            <text x="50" y="70" font-family="Arial" font-size="12" fill="#a8c8a8" text-anchor="middle" font-weight="bold" letter-spacing="2">WEAR</text>
+                        </svg>
+                        <h3>B!TARZWEAR</h3>
+                    </div>
+                    <p>Sokak stili, uygun fiyat ve yenilikçi giyim markası. Genç neslin ruhunu yansıtan kaliteli ürünler.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Hızlı Linkler</h3>
+                    <ul>
+                        <li><a href="#home">Ana Sayfa</a></li>
+                        <li><a href="#products">Ürünler</a></li>
+                        <li><a href="#about">Hakkımızda</a></li>
+                        <li><a href="#contact">İletişim</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>
