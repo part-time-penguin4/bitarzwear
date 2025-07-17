@@ -1,280 +1,43 @@
-// BitarzWear - Güncellenmiş Ana Site JavaScript
-// Admin panel entegrasyonu ile
+// BitarzWear - Gelişmiş Sepet Sistemi ile JavaScript
 
-// DOM Content Loaded
 document.addEventListener('DOMContentLoaded', function() {
-    // Data Manager'ın yüklenmesini bekle
-    if (typeof window.dataManager !== 'undefined') {
-        initializeWebsiteWithData();
-    } else {
-        setTimeout(() => initializeWebsiteWithData(), 100);
-    }
-});
-
-// Data Manager ile site başlatma
-function initializeWebsiteWithData() {
-    loadProductsFromData();
-    setupCartFunctionality();
-    setupProductSync();
+    console.log('BitarzWear site yüklendi!');
+    
+    // LocalStorage'dan sepeti yükle
+    loadCartFromStorage();
+    
+    // Ana fonksiyonları başlat
     setupSmoothScrolling();
+    setupCartFunctionality();
     setupAnimations();
     setupHeaderEffects();
-    setupSearchFunctionality();
+    setupProductInteractions();
+    setupCartModal();
+    
+    // Sepet ikonunu güncelle
     updateCartDisplay();
-    
-    console.log('BitarzWear site initialized with data manager');
-}
+});
 
-// Ürünleri Data Manager'dan yükle
-function loadProductsFromData() {
-    try {
-        const products = BitarzWearAPI.getProducts({ 
-            status: 'active',
-            inStock: true 
-        });
-        
-        const productsGrid = document.querySelector('.products-grid');
-        
-        if (productsGrid && products.length > 0) {
-            productsGrid.innerHTML = products.map(product => createProductCard(product)).join('');
-            setupProductEventListeners();
-            
-            // Animasyonları tekrar başlat
-            setupAnimations();
-        }
-    } catch (error) {
-        console.error('Error loading products:', error);
-        // Fallback olarak static ürünleri göster
-        loadFallbackProducts();
+// Sepet verileri
+let cart = [];
+
+// LocalStorage'dan sepeti yükle
+function loadCartFromStorage() {
+    const savedCart = localStorage.getItem('bitarzwear_cart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
     }
 }
 
-// Ürün kartı oluştur
-function createProductCard(product) {
-    const badgeStyle = product.badgeColor ? 
-        `style="background: ${product.badgeColor};"` : '';
-    
-    return `
-        <div class="product-card fade-in">
-            <div class="product-image" data-product="${product.category}-${product.id}">
-                <img src="${product.image}" alt="${product.name}" loading="lazy">
-                <div class="product-badge" ${badgeStyle}>${product.badge}</div>
-                ${product.stock <= 5 ? '<div class="low-stock-warning">Son Parçalar!</div>' : ''}
-            </div>
-            <div class="product-info">
-                <h3 class="product-title">${product.title}</h3>
-                <div class="product-price">
-                    ₺${product.price}
-                    <span class="original-price">₺${product.originalPrice}</span>
-                </div>
-                <button class="add-to-cart" 
-                        data-product-id="${product.id}" 
-                        data-price="${product.price}"
-                        data-name="${product.name}"
-                        ${product.stock <= 0 ? 'disabled' : ''}>
-                    ${product.stock <= 0 ? 'Stok Yok' : 'Sepete Ekle'}
-                </button>
-            </div>
-        </div>
-    `;
-}
-
-// Sepet fonksiyonalitesini güncelle
-function setupCartFunctionality() {
-    // Mevcut sepet durumunu yükle
-    updateCartDisplay();
-    
-    // Sepete ekle butonları için event listener
-    document.addEventListener('click', function(e) {
-        if (e.target.classList.contains('add-to-cart')) {
-            handleAddToCart(e.target);
-        }
-    });
-}
-
-// Sepete ekleme işlemi
-function handleAddToCart(button) {
-    if (button.disabled) return;
-    
-    const productId = parseInt(button.getAttribute('data-product-id'));
-    const productPrice = parseInt(button.getAttribute('data-price'));
-    const productName = button.getAttribute('data-name');
-    
-    try {
-        // Data Manager ile sepete ekle
-        const cart = BitarzWearAPI.addToCart(productId, 1);
-        
-        // Stok kontrolü ve güncelleme
-        const product = BitarzWearAPI.getProduct(productId);
-        if (product) {
-            // Optimistic UI update
-            BitarzWearAPI.updateProduct(productId, { 
-                stock: Math.max(0, product.stock - 1) 
-            });
-        }
-        
-        // UI güncelleme
-        button.disabled = true;
-        button.style.background = '#4CAF50';
-        button.textContent = 'Sepete Eklendi ✓';
-        
-        // Sepet sayısını güncelle
-        updateCartDisplay();
-        
-        // Animasyon efekti
-        button.closest('.product-card').classList.add('added-to-cart');
-        
-        // Success notification
-        showNotification(`${productName} sepete eklendi!`, 'success');
-        
-        // Reset button after 2 seconds
-        setTimeout(() => {
-            button.disabled = false;
-            button.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
-            button.textContent = 'Sepete Ekle';
-            button.closest('.product-card').classList.remove('added-to-cart');
-        }, 2000);
-        
-    } catch (error) {
-        console.error('Add to cart error:', error);
-        showNotification('Bir hata oluştu. Lütfen tekrar deneyin.', 'error');
-    }
-}
-
-// Sepet görüntüsünü güncelle
-function updateCartDisplay() {
-    try {
-        const cart = BitarzWearAPI.getCart();
-        const cartIcon = document.querySelector('.cart-icon');
-        const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
-        
-        if (cartIcon) {
-            cartIcon.innerHTML = `🛒 Sepet${itemCount > 0 ? ` (${itemCount})` : ''}`;
-            
-            // Cart animation
-            if (itemCount > 0) {
-                cartIcon.classList.add('cart-bounce');
-                setTimeout(() => cartIcon.classList.remove('cart-bounce'), 300);
-            }
-        }
-        
-        // Update cart total if cart page exists
-        updateCartTotalDisplay();
-        
-    } catch (error) {
-        console.error('Cart display update error:', error);
-    }
-}
-
-// Sepet toplam güncelle
-function updateCartTotalDisplay() {
-    const cartTotalElement = document.querySelector('.cart-total');
-    if (cartTotalElement) {
-        const total = BitarzWearAPI.getCartTotal();
-        cartTotalElement.textContent = `₺${total.toLocaleString()}`;
-    }
-}
-
-// Ürün senkronizasyonu
-function setupProductSync() {
-    try {
-        // Admin'den gelen ürün değişikliklerini dinle
-        BitarzWearAPI.on('products', (products) => {
-            loadProductsFromData();
-            showNotification('Ürünler güncellendi!', 'info');
-        });
-        
-        // Stok değişikliklerini dinle
-        BitarzWearAPI.on('stock-update', (data) => {
-            handleStockUpdate(data.productId, data.newStock);
-        });
-        
-        // Sepet değişikliklerini dinle
-        BitarzWearAPI.on('cart', (cart) => {
-            updateCartDisplay();
-        });
-        
-    } catch (error) {
-        console.error('Product sync setup error:', error);
-    }
-}
-
-// Stok güncelleme işlemi
-function handleStockUpdate(productId, newStock) {
-    const productCard = document.querySelector(`[data-product-id="${productId}"]`)?.closest('.product-card');
-    if (productCard) {
-        const button = productCard.querySelector('.add-to-cart');
-        
-        if (newStock <= 0) {
-            productCard.style.opacity = '0.6';
-            button.disabled = true;
-            button.textContent = 'Stok Yok';
-        } else if (newStock <= 5) {
-            // Düşük stok uyarısı
-            const warning = productCard.querySelector('.low-stock-warning') || 
-                           document.createElement('div');
-            warning.className = 'low-stock-warning';
-            warning.textContent = 'Son Parçalar!';
-            
-            if (!productCard.querySelector('.low-stock-warning')) {
-                productCard.querySelector('.product-image').appendChild(warning);
-            }
-        }
-    }
-}
-
-// Arama fonksiyonalitesi
-function setupSearchFunctionality() {
-    const searchInput = document.querySelector('.search-box input');
-    if (searchInput) {
-        let searchTimeout;
-        
-        searchInput.addEventListener('input', function(e) {
-            clearTimeout(searchTimeout);
-            const query = e.target.value.trim();
-            
-            searchTimeout = setTimeout(() => {
-                if (query.length >= 2) {
-                    searchProducts(query);
-                } else if (query.length === 0) {
-                    loadProductsFromData(); // Reset to all products
-                }
-            }, 300);
-        });
-    }
-}
-
-// Ürün arama
-function searchProducts(query) {
-    try {
-        const results = BitarzWearAPI.searchProducts(query);
-        const productsGrid = document.querySelector('.products-grid');
-        
-        if (productsGrid) {
-            if (results.length > 0) {
-                productsGrid.innerHTML = results.map(product => createProductCard(product)).join('');
-                setupProductEventListeners();
-            } else {
-                productsGrid.innerHTML = `
-                    <div class="no-results">
-                        <h3>Aradığınız ürün bulunamadı</h3>
-                        <p>"${query}" için sonuç bulunamadı.</p>
-                        <button onclick="loadProductsFromData()" class="btn btn-primary">
-                            Tüm Ürünleri Göster
-                        </button>
-                    </div>
-                `;
-            }
-        }
-    } catch (error) {
-        console.error('Search error:', error);
-    }
+// Sepeti LocalStorage'a kaydet
+function saveCartToStorage() {
+    localStorage.setItem('bitarzwear_cart', JSON.stringify(cart));
 }
 
 // Smooth scrolling
 function setupSmoothScrolling() {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
+        anchor.addEventListener('click', function(e) {
             e.preventDefault();
             const target = document.querySelector(this.getAttribute('href'));
             if (target) {
@@ -287,7 +50,442 @@ function setupSmoothScrolling() {
     });
 }
 
-// Animation setup
+// Sepet fonksiyonalitesi
+function setupCartFunctionality() {
+    // Tüm "Sepete Ekle" butonları için event listener
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
+            const productId = this.getAttribute('data-product');
+            const productPrice = parseFloat(this.getAttribute('data-price'));
+            const productTitle = this.closest('.product-card').querySelector('.product-title').textContent;
+            const productImage = this.closest('.product-card').querySelector('.product-image .product-placeholder');
+            const productImageSrc = productImage ? productImage.textContent : productTitle;
+
+            addToCart(productId, productTitle, productPrice, productImageSrc, this);
+        });
+    });
+
+    // Sepet ikonuna tıklama
+    document.querySelector('.cart-icon').addEventListener('click', function(e) {
+        e.preventDefault();
+        openCartModal();
+    });
+}
+
+// Sepete ekleme fonksiyonu
+function addToCart(id, title, price, image, buttonElement) {
+    // Çoklu tıklamayı engelle
+    if (buttonElement.disabled) return;
+    
+    // Ürün zaten sepette var mı kontrol et
+    const existingItem = cart.find(item => item.id === id);
+    
+    if (existingItem) {
+        // Miktar artır
+        existingItem.quantity += 1;
+    } else {
+        // Yeni ürün ekle
+        cart.push({
+            id: id,
+            title: title,
+            price: price,
+            image: image,
+            quantity: 1,
+            addedAt: new Date().toISOString()
+        });
+    }
+
+    // Sepeti kaydet
+    saveCartToStorage();
+    
+    // Butonu geçici olarak değiştir
+    buttonElement.disabled = true;
+    buttonElement.style.background = '#4CAF50';
+    buttonElement.innerHTML = '<i class="fas fa-check"></i> Eklendi';
+
+    // Sepet görüntüsünü güncelle
+    updateCartDisplay();
+
+    // Başarı mesajı göster
+    showNotification(`${title} sepete eklendi!`, 'success');
+
+    // Sepet animasyonu
+    animateCartIcon();
+
+    // 2 saniye sonra butonu eski haline döndür
+    setTimeout(() => {
+        buttonElement.disabled = false;
+        buttonElement.style.background = '#c49a9a';
+        buttonElement.textContent = 'Sepete Ekle';
+    }, 2000);
+
+    console.log('Sepet güncellendi:', cart);
+}
+
+// Sepetten çıkarma fonksiyonu
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.id !== productId);
+    saveCartToStorage();
+    updateCartDisplay();
+    updateCartModal();
+    showNotification('Ürün sepetten çıkarıldı', 'info');
+}
+
+// Ürün miktarını güncelle
+function updateQuantity(productId, change) {
+    const item = cart.find(item => item.id === productId);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            removeFromCart(productId);
+        } else {
+            saveCartToStorage();
+            updateCartDisplay();
+            updateCartModal();
+        }
+    }
+}
+
+// Sepeti temizle
+function clearCart() {
+    cart = [];
+    saveCartToStorage();
+    updateCartDisplay();
+    updateCartModal();
+    showNotification('Sepet temizlendi', 'info');
+}
+
+// Sepet görüntüsünü güncelle
+function updateCartDisplay() {
+    const cartIcon = document.querySelector('.cart-icon');
+    const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+    const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    
+    if (cartIcon) {
+        cartIcon.innerHTML = `🛒 Sepet${itemCount > 0 ? ` (${itemCount})` : ''}`;
+        
+        // Sepet badge'i ekle
+        if (itemCount > 0) {
+            cartIcon.style.position = 'relative';
+            let badge = cartIcon.querySelector('.cart-badge');
+            if (!badge) {
+                badge = document.createElement('span');
+                badge.className = 'cart-badge';
+                cartIcon.appendChild(badge);
+            }
+            badge.textContent = itemCount;
+            badge.style.cssText = `
+                position: absolute;
+                top: -8px;
+                right: -8px;
+                background: #ff4444;
+                color: white;
+                border-radius: 50%;
+                width: 20px;
+                height: 20px;
+                font-size: 12px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: bold;
+            `;
+        }
+    }
+}
+
+// Sepet animasyonu
+function animateCartIcon() {
+    const cartIcon = document.querySelector('.cart-icon');
+    cartIcon.classList.add('cart-bounce');
+    setTimeout(() => {
+        cartIcon.classList.remove('cart-bounce');
+    }, 300);
+}
+
+// Sepet modal'ını kur
+function setupCartModal() {
+    // Modal HTML'ini oluştur
+    const modalHTML = `
+        <div id="cartModal" class="cart-modal" style="display: none;">
+            <div class="cart-modal-content">
+                <div class="cart-header">
+                    <h2>🛒 Sepetiniz</h2>
+                    <button class="close-cart" onclick="closeCartModal()">&times;</button>
+                </div>
+                <div class="cart-items-container" id="cartItemsContainer">
+                    <!-- Sepet içeriği buraya gelecek -->
+                </div>
+                <div class="cart-footer">
+                    <div class="cart-total">
+                        <strong>Toplam: <span id="cartTotalAmount">₺0</span></strong>
+                    </div>
+                    <div class="cart-actions">
+                        <button class="clear-cart-btn" onclick="clearCart()">Sepeti Temizle</button>
+                        <button class="checkout-btn" onclick="checkout()">Siparişi Tamamla</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+    
+    // Modal stillerini ekle
+    const modalStyles = `
+        <style>
+        .cart-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .cart-modal-content {
+            background: white;
+            border-radius: 15px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: slideIn 0.3s ease;
+        }
+        
+        .cart-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .cart-items-container {
+            padding: 1rem;
+            min-height: 200px;
+        }
+        
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+            gap: 1rem;
+        }
+        
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .cart-item-price {
+            color: #c49a9a;
+            font-weight: bold;
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-btn:hover {
+            background: #f0f0f0;
+        }
+        
+        .remove-item {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .cart-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #eee;
+        }
+        
+        .cart-total {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cart-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        
+        .clear-cart-btn {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+        
+        .checkout-btn {
+            background: #c49a9a;
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .empty-cart {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        </style>
+    `;
+    
+    document.head.insertAdjacentHTML('beforeend', modalStyles);
+}
+
+// Sepet modal'ını aç
+function openCartModal() {
+    const modal = document.getElementById('cartModal');
+    modal.style.display = 'flex';
+    updateCartModal();
+    
+    // Modal dışına tıklayınca kapat
+    modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+            closeCartModal();
+        }
+    });
+}
+
+// Sepet modal'ını kapat
+function closeCartModal() {
+    const modal = document.getElementById('cartModal');
+    modal.style.display = 'none';
+}
+
+// Sepet modal içeriğini güncelle
+function updateCartModal() {
+    const container = document.getElementById('cartItemsContainer');
+    const totalElement = document.getElementById('cartTotalAmount');
+    
+    if (cart.length === 0) {
+        container.innerHTML = `
+            <div class="empty-cart">
+                <h3>Sepetiniz boş</h3>
+                <p>Alışverişe başlamak için ürünleri inceleyin!</p>
+                <button onclick="closeCartModal(); document.getElementById('products').scrollIntoView({behavior: 'smooth'})" 
+                        style="background: #c49a9a; color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 8px; cursor: pointer; margin-top: 1rem;">
+                    Ürünleri İncele
+                </button>
+            </div>
+        `;
+        totalElement.textContent = '₺0';
+    } else {
+        container.innerHTML = cart.map(item => `
+            <div class="cart-item">
+                <div class="cart-item-image">${item.image}</div>
+                <div class="cart-item-details">
+                    <div class="cart-item-title">${item.title}</div>
+                    <div class="cart-item-price">₺${item.price}</div>
+                    <div class="quantity-controls">
+                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', -1)">-</button>
+                        <span style="padding: 0 0.5rem; font-weight: bold;">${item.quantity}</span>
+                        <button class="quantity-btn" onclick="updateQuantity('${item.id}', 1)">+</button>
+                    </div>
+                </div>
+                <button class="remove-item" onclick="removeFromCart('${item.id}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `).join('');
+        
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        totalElement.textContent = `₺${total.toFixed(2)}`;
+    }
+}
+
+// Sipariş tamamlama
+function checkout() {
+    if (cart.length === 0) {
+        showNotification('Sepetiniz boş!', 'error');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const itemCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+    
+    // WhatsApp siparişi
+    const orderText = `🛒 *BitarzWear Siparişim*\n\n` +
+        cart.map(item => `• ${item.title} (${item.quantity} adet) - ₺${(item.price * item.quantity).toFixed(2)}`).join('\n') +
+        `\n\n*Toplam: ₺${total.toFixed(2)}*\n*Ürün Sayısı: ${itemCount} adet*`;
+    
+    const whatsappUrl = `https://wa.me/905071283393?text=${encodeURIComponent(orderText)}`;
+    
+    window.open(whatsappUrl, '_blank');
+    
+    showNotification('WhatsApp\'a yönlendiriliyorsunuz...', 'success');
+    closeCartModal();
+}
+
+// Animasyonlar
 function setupAnimations() {
     const observerOptions = {
         threshold: 0.1,
@@ -311,37 +509,35 @@ function setupAnimations() {
     });
 }
 
-// Header effects
+// Header scroll efektleri
 function setupHeaderEffects() {
     window.addEventListener('scroll', () => {
         const header = document.querySelector('header');
         if (window.scrollY > 100) {
-            header.style.background = 'rgba(255, 255, 255, 0.98)';
+            header.style.background = 'rgba(245, 241, 235, 0.98)';
             header.style.boxShadow = '0 2px 25px rgba(0, 0, 0, 0.15)';
         } else {
-            header.style.background = 'rgba(255, 255, 255, 0.95)';
+            header.style.background = 'rgba(245, 241, 235, 0.95)';
             header.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
         }
     });
 }
 
-// Product event listeners
-function setupProductEventListeners() {
-    // Product card hover effects
+// Ürün etkileşimleri
+function setupProductInteractions() {
     document.querySelectorAll('.product-card').forEach(card => {
         card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-8px)';
+            this.style.transform = 'translateY(-10px)';
         });
 
         card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(-5px)';
+            this.style.transform = 'translateY(0)';
         });
     });
 
-    // Product image zoom effect
-    document.querySelectorAll('.product-image img').forEach(img => {
+    document.querySelectorAll('.product-image').forEach(img => {
         img.addEventListener('mouseenter', function() {
-            this.style.transform = 'scale(1.05)';
+            this.style.transform = 'scale(1.02)';
             this.style.transition = 'transform 0.3s ease';
         });
 
@@ -351,59 +547,33 @@ function setupProductEventListeners() {
     });
 }
 
-// Fallback ürünler (Data Manager çalışmazsa)
-function loadFallbackProducts() {
-    console.warn('Loading fallback products - Data Manager not available');
-    
-    const fallbackProducts = [
-        {
-            id: 1,
-            title: 'Oversize Basic Tee',
-            price: 129,
-            originalPrice: 179,
-            badge: 'OVERSIZE',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPk92ZXJzaXplIFRlZTwvdGV4dD4KPC9zdmc+',
-            category: 'tshirt',
-            stock: 45
-        }
-        // Daha fazla fallback ürün eklenebilir
-    ];
-    
-    const productsGrid = document.querySelector('.products-grid');
-    if (productsGrid) {
-        productsGrid.innerHTML = fallbackProducts.map(product => createProductCard(product)).join('');
-        setupProductEventListeners();
-    }
-}
-
-// Notification system
+// Bildirim sistemi
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
     
     const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
     notification.innerHTML = `
-        <span class="notification-icon">${icon}</span>
-        <span class="notification-message">${message}</span>
+        <span style="margin-right: 8px; font-weight: bold;">${icon}</span>
+        <span>${message}</span>
     `;
 
     Object.assign(notification.style, {
         position: 'fixed',
         top: '20px',
         right: '20px',
-        background: getNotificationColor(type),
+        background: type === 'success' ? '#4CAF50' : type === 'error' ? '#f44336' : '#c49a9a',
         color: 'white',
         padding: '1rem 1.5rem',
         borderRadius: '8px',
         boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-        zIndex: '10000',
+        zIndex: '10001',
         transform: 'translateX(100%)',
         transition: 'transform 0.3s ease',
         fontWeight: '600',
         fontSize: '14px',
         display: 'flex',
         alignItems: 'center',
-        gap: '0.5rem',
         maxWidth: '300px'
     });
 
@@ -423,192 +593,37 @@ function showNotification(message, type = 'info') {
     }, 3000);
 }
 
-function getNotificationColor(type) {
-    switch(type) {
-        case 'success': return '#4CAF50';
-        case 'error': return '#f44336';
-        case 'warning': return '#ff9800';
-        default: return '#667eea';
+// Klavye kısayolları
+document.addEventListener('keydown', function(e) {
+    // ESC ile modal'ı kapat
+    if (e.key === 'Escape') {
+        closeCartModal();
     }
-}
+});
 
-// Error handling
+// Hata yakalama
 window.addEventListener('error', function(e) {
-    console.error('JavaScript Error:', e.error);
+    console.error('JavaScript Hatası:', e.error);
     showNotification('Bir hata oluştu. Lütfen sayfayı yenileyin.', 'error');
 });
 
-// Performance monitoring
-function trackPerformance() {
-    window.addEventListener('load', () => {
-        if (performance.getEntriesByType) {
-            const perfData = performance.getEntriesByType('navigation')[0];
-            if (perfData) {
-                console.log('Page Load Time:', perfData.loadEventEnd - perfData.loadEventStart + 'ms');
-            }
-        }
-    });
-}
-
-// Sepet sayfası fonksiyonları (eğer ayrı sayfa varsa)
-function setupCartPage() {
-    const cartContainer = document.querySelector('.cart-container');
-    if (cartContainer) {
-        renderCartItems();
-        setupCartActions();
-    }
-}
-
-function renderCartItems() {
-    const cart = BitarzWearAPI.getCart();
-    const cartContainer = document.querySelector('.cart-items');
-    
-    if (cartContainer) {
-        if (cart.length === 0) {
-            cartContainer.innerHTML = `
-                <div class="empty-cart">
-                    <h3>Sepetiniz boş</h3>
-                    <p>Alışverişe başlamak için ürünler ekleyin.</p>
-                    <a href="#products" class="btn btn-primary">Ürünleri İncele</a>
-                </div>
-            `;
-        } else {
-            cartContainer.innerHTML = cart.map(item => `
-                <div class="cart-item" data-product-id="${item.productId}">
-                    <img src="${item.image}" alt="${item.productName}">
-                    <div class="item-details">
-                        <h4>${item.productName}</h4>
-                        <div class="item-controls">
-                            <button onclick="updateCartQuantity(${item.productId}, -1)">-</button>
-                            <span class="quantity">${item.quantity}</span>
-                            <button onclick="updateCartQuantity(${item.productId}, 1)">+</button>
-                        </div>
-                        <div class="item-price">₺${(item.price * item.quantity).toLocaleString()}</div>
-                    </div>
-                    <button onclick="removeFromCart(${item.productId})" class="remove-btn">×</button>
-                </div>
-            `).join('');
-        }
-        
-        updateCartTotalDisplay();
-    }
-}
-
-function updateCartQuantity(productId, change) {
-    const cart = BitarzWearAPI.getCart();
-    const item = cart.find(i => i.productId === productId);
-    
-    if (item) {
-        const newQuantity = item.quantity + change;
-        if (newQuantity <= 0) {
-            BitarzWearAPI.removeFromCart(productId);
-        } else {
-            item.quantity = newQuantity;
-            BitarzWearAPI.setData('cart', cart);
-        }
-        renderCartItems();
-        updateCartDisplay();
-    }
-}
-
-function removeFromCart(productId) {
-    BitarzWearAPI.removeFromCart(productId);
-    renderCartItems();
-    updateCartDisplay();
-    showNotification('Ürün sepetten çıkarıldı', 'info');
-}
-
-// Initialize performance tracking
-trackPerformance();
-
-// Export functions for global access
-window.BitarzWearSite = {
-    loadProducts: loadProductsFromData,
-    searchProducts,
-    updateCartDisplay,
-    showNotification,
-    handleAddToCart
+// Global fonksiyonlar
+window.BitarzWear = {
+    cart: cart,
+    addToCart: addToCart,
+    removeFromCart: removeFromCart,
+    clearCart: clearCart,
+    openCartModal: openCartModal,
+    closeCartModal: closeCartModal,
+    showNotification: showNotification
 };
 
-console.log('BitarzWear site script loaded successfully!');
-// Fallback ürün ekleme fonksiyonu
-function addMoreProducts() {
-    const productsGrid = document.querySelector('.products-grid');
-    if (!productsGrid) return;
-    
-    const additionalProducts = [
-        {
-            id: 'white-tee',
-            title: 'Oversize White Tee',
-            price: 139,
-            originalPrice: 189,
-            badge: 'WHITE',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZmZmZmZmIi8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiNjY2MiIHRleHQtYW5jaG9yPSJtaWRkbGUiPldoaXRlIFRlZTwvdGV4dD4KPC9zdmc+'
-        },
-        {
-            id: 'grey-pants',
-            title: 'Grey Baggy Pants',
-            price: 199,
-            originalPrice: 279,
-            badge: 'BAGGY',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZThlOGU4Ii8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiNhYWEiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkdyZXkgUGFudHM8L3RleHQ+Cjwvc3ZnPg=='
-        },
-        {
-            id: 'black-pants',
-            title: 'Black Loose Fit',
-            price: 179,
-            originalPrice: 239,
-            badge: 'LOOSE',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMmEyYTJhIi8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJsYWNrIFBhbnRzPC90ZXh0Pgo8L3N2Zz4='
-        },
-        {
-            id: 'comfy-set',
-            title: 'Comfy Set Bundle',
-            price: 299,
-            originalPrice: 399,
-            badge: 'BUNDLE',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjZjBmMGYwIi8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM5OTkiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkNvbWZ5IFNldDwvdGV4dD4KPC9zdmc+'
-        },
-        {
-            id: 'bomber-jacket',
-            title: 'Street Bomber',
-            price: 249,
-            originalPrice: 329,
-            badge: 'BOMBER',
-            image: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDI4MCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMzAwIiBmaWxsPSIjMmEyYTJhIi8+Cjx0ZXh0IHg9IjE0MCIgeT0iMTUwIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMjAiIGZpbGw9IiM3NzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPkJvbWJlcjwvdGV4dD4KPC9zdmc+'
-        }
-    ];
-    
-    // Mevcut ürün sayısını kontrol et
-    const currentProducts = productsGrid.querySelectorAll('.product-card').length;
-    console.log('Mevcut ürün sayısı:', currentProducts);
-    
-    if (currentProducts < 6) {
-        additionalProducts.forEach(product => {
-            const productHTML = `
-                <div class="product-card fade-in">
-                    <div class="product-image" data-product="${product.id}">
-                        <img src="${product.image}" alt="${product.title}">
-                        <div class="product-badge">${product.badge}</div>
-                    </div>
-                    <div class="product-info">
-                        <h3 class="product-title">${product.title}</h3>
-                        <div class="product-price">
-                            ₺${product.price}
-                            <span class="original-price">₺${product.originalPrice}</span>
-                        </div>
-                        <button class="add-to-cart" data-product="${product.id}" data-price="${product.price}">Sepete Ekle</button>
-                    </div>
-                </div>
-            `;
-            productsGrid.insertAdjacentHTML('beforeend', productHTML);
-        });
-        
-        console.log('Ürünler eklendi! Yeni toplam:', productsGrid.querySelectorAll('.product-card').length);
-    }
-}
+// Global fonksiyonları window'a ekle (HTML'den çağırabilmek için)
+window.updateQuantity = updateQuantity;
+window.removeFromCart = removeFromCart;
+window.clearCart = clearCart;
+window.openCartModal = openCartModal;
+window.closeCartModal = closeCartModal;
+window.checkout = checkout;
 
-// Sayfa yüklendiğinde çalıştır
-document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(addMoreProducts, 1000); // 1 saniye bekle
-});
+console.log('BitarzWear Gelişmiş Sepet Sistemi yüklendi!');
