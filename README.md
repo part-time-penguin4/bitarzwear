@@ -7,17 +7,7 @@ Modern street style giyim markası web sitesi. Oversize tişörtler, baggy panto
 
 ## 🌐 Canlı Demo
 
-**Site URL:** [https://kullaniciadi.github.io/bitarzwear](https://kullaniciadi.github.io/bitarzwear)
-
-*Not: `kullaniciadi` yerine kendi GitHub kullanıcı adınızı yazın*
-
-## ✨ Özellikler
-
-- 🛒 **Gelişmiş Sepet Sistemi** - LocalStorage ile kalıcı sepet
-- 📱 **WhatsApp Entegrasyonu** - Direkt sipariş gönderimi
-- 🎨 **Responsive Tasarım** - Mobil uyumlu arayüz
-- ⚡ **Hızlı Yükleme** - Optimize edilmiş performans
-- 🔍 **SEO Dostu** - Arama motorları için optimize
+**Site URL:** (https://part-time-penguin4.github.io/bitarzwear)
 
 ## 🛍️ Ürün Koleksiyonu
 
@@ -67,56 +57,6 @@ bitarzwear/
 ├── README.md           # Proje dokümantasyonu
 └── .gitignore          # Git ignore dosyası
 ```
-
-## 🔧 Kurulum
-
-### Yerel Geliştirme:
-
-1. **Repository'yi klonlayın:**
-   ```bash
-   git clone https://github.com/kullaniciadi/bitarzwear.git
-   ```
-
-2. **Proje klasörüne gidin:**
-   ```bash
-   cd bitarzwear
-   ```
-
-3. **Web tarayıcısında açın:**
-   ```bash
-   # index.html dosyasını çift tıklayın
-   # Veya Live Server uzantısı kullanın
-   ```
-
-### GitHub Pages Kurulumu:
-
-1. Repository'yi fork edin
-2. Settings → Pages → Source: main branch
-3. 5-10 dakika bekleyin
-4. Site URL'niz hazır!
-
-## 💻 Geliştirme
-
-### Yeni özellik eklemek için:
-
-1. **Branch oluşturun:**
-   ```bash
-   git checkout -b yeni-ozellik
-   ```
-
-2. **Değişiklikleri yapın**
-
-3. **Commit edin:**
-   ```bash
-   git add .
-   git commit -m "Yeni özellik: açıklama"
-   ```
-
-4. **Push edin:**
-   ```bash
-   git push origin yeni-ozellik
-   ```
-
 ## 🎯 Gelecek Özellikler
 
 - [ ] Ürün detay sayfaları
@@ -141,25 +81,6 @@ Hata bulduysanız lütfen [Issues](https://github.com/kullaniciadi/bitarzwear/is
 ## 📄 Lisans
 
 Bu proje MIT lisansı altında lisanslanmıştır. Detaylar için `LICENSE` dosyasına bakın.
-
-## 👨‍💻 Geliştirici
-
-**BitarzWear Development Team**
-
-- 💼 Business: E-ticaret ve moda sektörü
-- 🎨 Design: Minimalist ve modern tasarım
-- 💻 Development: Modern web teknolojileri
-
----
-
-## 📊 Proje İstatistikleri
-
-- **Başlangıç Tarihi:** 2025
-- **Son Güncelleme:** Ocak 2025
-- **Dil:** Türkçe
-- **Durum:** Aktif Geliştirme
-
----
 
 ### ⭐ Bu projeyi beğendiyseniz yıldız vermeyi unutmayın!
 
