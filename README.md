@@ -5,5 +5,5 @@
 
 ## 🐛 Hata Bildirimi
 
-Hata bulduysanız lütfen [Issues](https://github.com/kullaniciadi/bitarzwear/issues) bölümünde bildirin.
+Hata bulduysanız lütfen [Issues](https://github.com/part-time-penguin4/bitarzwear/issues) bölümünde bildirin.
 
